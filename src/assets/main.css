@@ -1,35 +1,150 @@
-@import './base.css';
+/* ============ ReynalGym · estilos globales ============ */
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
+:root {
+  --rg-primary: #4f46e5;
+  --rg-primary-dark: #4338ca;
+  --rg-primary-soft: #eef2ff;
+  --rg-bg: #f4f6fb;
+  --rg-surface: #ffffff;
+  --rg-text: #1e293b;
+  --rg-muted: #64748b;
+  --rg-border: #e2e8f0;
+  --rg-nav: #0f172a;
+
+  /* Semáforo (mismos tonos que los badges de Bootstrap) */
+  --rg-ok: #198754;
+  --rg-warn: #ffc107;
+  --rg-bad: #dc3545;
+
+  /* Forma de pago */
+  --rg-efectivo: #198754;
+  --rg-transferencia: #0ea5e9;
+
+  --rg-radius: 14px;
+  --rg-shadow: 0 1px 2px rgba(15, 23, 42, 0.05), 0 6px 18px rgba(15, 23, 42, 0.06);
 }
 
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
+/* ---------- Base ---------- */
+body {
+  background: var(--rg-bg);
+  color: var(--rg-text);
+  font-family: 'Segoe UI', system-ui, -apple-system, Roboto, 'Helvetica Neue', Arial, sans-serif;
+  -webkit-font-smoothing: antialiased;
 }
+h1 { font-weight: 700; letter-spacing: -0.01em; }
+a { color: var(--rg-primary); }
+a:hover { color: var(--rg-primary-dark); }
 
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
-  }
+/* ---------- Barra de navegación ---------- */
+.rg-navbar { background: var(--rg-nav); box-shadow: 0 2px 10px rgba(15, 23, 42, 0.25); }
+.rg-navbar-inner {
+  display: flex; align-items: center; flex-wrap: wrap; gap: 0.5rem 1rem;
+  max-width: 1140px; margin: 0 auto; padding: 0.7rem 1rem;
 }
+.rg-brand { color: #fff; font-weight: 800; font-size: 1.25rem; letter-spacing: 0.3px; text-decoration: none; margin-right: 1rem; }
+.rg-brand:hover { color: #fff; }
+.rg-brand span { color: #818cf8; }
+.rg-links { display: flex; gap: 0.25rem; flex: 1; }
+.rg-link { color: #cbd5e1; text-decoration: none; font-weight: 500; padding: 0.45rem 0.9rem; border-radius: 8px; transition: background 0.15s, color 0.15s; }
+.rg-link:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
+.rg-link.router-link-active { background: rgba(129, 140, 248, 0.2); color: #fff; }
+.rg-logout { background: transparent; border: 1px solid rgba(255, 255, 255, 0.25); color: #e2e8f0; border-radius: 8px; padding: 0.4rem 0.9rem; font-weight: 500; transition: background 0.15s; }
+.rg-logout:hover { background: rgba(255, 255, 255, 0.1); }
 
-@media (min-width: 1024px) {
-  body {
-    display: flex;
-    place-items: center;
-  }
+/* ---------- Páginas y tarjetas ---------- */
+.rg-page { max-width: 1140px; margin: 0 auto; padding: 1.75rem 1rem 3rem; }
+.rg-page-title { margin-bottom: 0.15rem; }
+.rg-page-sub { color: var(--rg-muted); margin-bottom: 1.5rem; }
+.rg-date::first-letter { text-transform: uppercase; }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
-  }
+.rg-card {
+  background: var(--rg-surface); border: 1px solid var(--rg-border);
+  border-radius: var(--rg-radius); box-shadow: var(--rg-shadow);
+  padding: 1.25rem 1.4rem; height: 100%;
+}
+.rg-card h2 { font-size: 1rem; font-weight: 700; margin: 0 0 0.2rem; }
+.rg-sub { color: var(--rg-muted); font-size: 0.85rem; margin-bottom: 1rem; }
+
+/* ---------- Tarjetas de resumen (KPI) ---------- */
+.rg-kpi { position: relative; overflow: hidden; padding-left: 1.6rem; }
+.rg-kpi::before { content: ''; position: absolute; left: 0; top: 0; bottom: 0; width: 5px; background: var(--kpi-color, var(--rg-primary)); }
+.rg-kpi-label { font-size: 0.75rem; letter-spacing: 0.06em; text-transform: uppercase; color: var(--rg-muted); font-weight: 600; }
+.rg-kpi-value { font-size: 2.1rem; font-weight: 700; line-height: 1.15; margin: 0.2rem 0; }
+.rg-kpi-note { font-size: 0.8rem; color: var(--rg-muted); }
+.k-total { --kpi-color: var(--rg-primary); }
+.k-ok { --kpi-color: var(--rg-ok); }
+.k-warn { --kpi-color: var(--rg-warn); }
+.k-bad { --kpi-color: var(--rg-bad); }
+
+/* ---------- Barras ---------- */
+.rg-bar-row { margin-bottom: 0.9rem; }
+.rg-bar-head { display: flex; justify-content: space-between; font-size: 0.88rem; margin-bottom: 0.3rem; }
+.rg-bar-track { height: 10px; background: #eef2f7; border-radius: 999px; overflow: hidden; }
+.rg-bar-fill { height: 100%; border-radius: 999px; background: var(--rg-primary); transition: width 0.5s ease; }
+.rg-bar-fill.efectivo { background: var(--rg-efectivo); }
+.rg-bar-fill.transferencia { background: var(--rg-transferencia); }
+
+.rg-stack { display: flex; height: 16px; border-radius: 999px; overflow: hidden; background: #eef2f7; }
+.rg-stack > div { transition: width 0.5s ease; }
+.rg-stack .s-ok { background: var(--rg-ok); }
+.rg-stack .s-warn { background: var(--rg-warn); }
+.rg-stack .s-bad { background: var(--rg-bad); }
+.rg-legend { display: flex; flex-wrap: wrap; gap: 0.5rem 1rem; margin-top: 0.9rem; font-size: 0.85rem; color: var(--rg-muted); }
+.rg-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 0.4rem; }
+
+/* ---------- Lista y contadores ---------- */
+.rg-list { list-style: none; margin: 0; padding: 0; }
+.rg-list li { display: flex; justify-content: space-between; align-items: center; gap: 0.75rem; padding: 0.65rem 0; border-bottom: 1px solid var(--rg-border); }
+.rg-list li:last-child { border-bottom: 0; }
+.rg-list a { color: var(--rg-text); font-weight: 600; text-decoration: none; }
+.rg-list a:hover { color: var(--rg-primary); }
+
+.rg-trio { display: flex; justify-content: space-between; text-align: center; gap: 0.5rem; }
+.rg-trio-num { font-size: 1.9rem; font-weight: 700; color: var(--rg-primary); line-height: 1.1; }
+.rg-trio-lbl { font-size: 0.8rem; color: var(--rg-muted); }
+
+/* ---------- Tarjetas "próximamente" ---------- */
+.rg-soon { border-style: dashed; background: #fbfcfe; box-shadow: none; }
+.rg-pill { display: inline-block; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; padding: 0.2rem 0.6rem; border-radius: 999px; background: var(--rg-primary-soft); color: var(--rg-primary); }
+
+/* ---------- Login ---------- */
+.rg-login-wrap { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1rem; background: radial-gradient(circle at top, #e0e7ff 0%, var(--rg-bg) 60%); }
+.rg-login-card { width: 100%; max-width: 400px; background: var(--rg-surface); border-radius: 18px; box-shadow: 0 10px 40px rgba(15, 23, 42, 0.12); padding: 2rem; }
+.rg-login-card h1 { font-size: 1.9rem; margin-bottom: 0.1rem; }
+.rg-login-card h1 span { color: var(--rg-primary); }
+
+/* ---------- Ajustes sobre Bootstrap ---------- */
+.btn { border-radius: 10px; font-weight: 600; }
+.btn-primary {
+  --bs-btn-bg: var(--rg-primary); --bs-btn-border-color: var(--rg-primary);
+  --bs-btn-hover-bg: var(--rg-primary-dark); --bs-btn-hover-border-color: var(--rg-primary-dark);
+  --bs-btn-active-bg: var(--rg-primary-dark); --bs-btn-active-border-color: var(--rg-primary-dark);
+  --bs-btn-disabled-bg: var(--rg-primary); --bs-btn-disabled-border-color: var(--rg-primary);
+}
+.btn-outline-primary {
+  --bs-btn-color: var(--rg-primary); --bs-btn-border-color: var(--rg-primary);
+  --bs-btn-hover-bg: var(--rg-primary); --bs-btn-hover-border-color: var(--rg-primary);
+  --bs-btn-active-bg: var(--rg-primary); --bs-btn-active-border-color: var(--rg-primary);
+}
+.form-control, .form-select { border-radius: 10px; border-color: var(--rg-border); }
+.form-control:focus, .form-select:focus { border-color: var(--rg-primary); box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.15); }
+.card { border-radius: var(--rg-radius); border-color: var(--rg-border); }
+
+.badge { font-weight: 600; padding: 0.45em 0.75em; border-radius: 999px; }
+.badge.bg-warning { color: #1f2937; } /* texto oscuro: el blanco no se leía sobre amarillo */
+
+.table { --bs-table-bg: var(--rg-surface); border-collapse: separate; border-spacing: 0; border-radius: var(--rg-radius); box-shadow: var(--rg-shadow); }
+.table thead th { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--rg-muted); border-bottom: 1px solid var(--rg-border); }
+.table > :not(caption) > * > * { padding: 0.8rem 0.9rem; }
+.table thead th:first-child { border-top-left-radius: var(--rg-radius); }
+.table thead th:last-child { border-top-right-radius: var(--rg-radius); }
+.table tbody tr:last-child td:first-child { border-bottom-left-radius: var(--rg-radius); }
+.table tbody tr:last-child td:last-child { border-bottom-right-radius: var(--rg-radius); }
+.table-hover { --bs-table-hover-bg: var(--rg-primary-soft); }
+
+/* ---------- Celular ---------- */
+@media (max-width: 576px) {
+  .rg-kpi-value { font-size: 1.7rem; }
+  .rg-navbar-inner { justify-content: space-between; }
+  .rg-links { order: 3; width: 100%; flex: none; }
 }

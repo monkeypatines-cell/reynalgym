@@ -26,21 +26,25 @@ async function handleLogin() {
 </script>
 
 <template>
-  <div class="container mt-5" style="max-width: 400px">
-    <h1 class="mb-4">ReynalGym</h1>
-    <form @submit.prevent="handleLogin">
-      <div class="mb-3">
-        <label class="form-label">Correo</label>
-        <input v-model="email" type="email" class="form-control" required />
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Contraseña</label>
-        <input v-model="password" type="password" class="form-control" required />
-      </div>
-      <div v-if="error" class="alert alert-danger py-2">{{ error }}</div>
-      <button type="submit" class="btn btn-primary w-100" :disabled="loading">
-        {{ loading ? 'Ingresando...' : 'Ingresar' }}
-      </button>
-    </form>
+  <div class="rg-login-wrap">
+    <div class="rg-login-card">
+      <h1>Reynal<span>Gym</span></h1>
+      <p class="rg-sub">Panel de administración</p>
+
+      <form @submit.prevent="handleLogin">
+        <div class="mb-3">
+          <label class="form-label">Correo</label>
+          <input v-model="email" type="email" class="form-control" required />
+        </div>
+        <div class="mb-3">
+          <label class="form-label">Contraseña</label>
+          <input v-model="password" type="password" class="form-control" required />
+        </div>
+        <div v-if="error" class="alert alert-danger py-2">{{ error }}</div>
+        <button type="submit" class="btn btn-primary w-100" :disabled="loading">
+          {{ loading ? 'Ingresando...' : 'Ingresar' }}
+        </button>
+      </form>
+    </div>
   </div>
 </template>

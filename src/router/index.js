@@ -3,6 +3,7 @@ import { supabase } from '../supabase'
 import Login from '../views/Login.vue'
 import Dashboard from '../views/Dashboard.vue'
 import Miembros from '../views/Miembros.vue'
+import NuevoMiembro from '../views/NuevoMiembro.vue'
 import PerfilMiembro from '../views/PerfilMiembro.vue'
 
 const router = createRouter({
@@ -11,6 +12,7 @@ const router = createRouter({
     { path: '/', name: 'login', component: Login },
     { path: '/dashboard', name: 'dashboard', component: Dashboard, meta: { requiresAuth: true } },
     { path: '/miembros', name: 'miembros', component: Miembros, meta: { requiresAuth: true } },
+    { path: '/miembros/nuevo', name: 'nuevo-miembro', component: NuevoMiembro, meta: { requiresAuth: true } },
     { path: '/perfil/:id', name: 'perfil', component: PerfilMiembro, meta: { requiresAuth: true } },
   ],
 })
