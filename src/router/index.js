@@ -14,6 +14,7 @@ const router = createRouter({
     { path: '/miembros', name: 'miembros', component: Miembros, meta: { requiresAuth: true } },
     { path: '/miembros/nuevo', name: 'nuevo-miembro', component: NuevoMiembro, meta: { requiresAuth: true } },
     { path: '/perfil/:id', name: 'perfil', component: PerfilMiembro, meta: { requiresAuth: true } },
+    { path: '/semaforo',name: 'Semaforo',component: () => import('../views/Semaforo.vue'),},
   ],
 })
 

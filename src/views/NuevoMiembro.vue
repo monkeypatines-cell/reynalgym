@@ -1,4 +1,5 @@
 <script setup>
+
 import { ref, watch } from 'vue'
 import { RouterLink, useRouter } from 'vue-router'
 import { supabase } from '../supabase'
@@ -9,6 +10,7 @@ const nombre = ref('')
 const celular = ref('')
 const plan = ref('mensual')
 const formaPago = ref('efectivo')
+const monto = ref('')
 const fechaVencimiento = ref('')
 const edad = ref('')
 const pesoActual = ref('')
@@ -18,9 +20,13 @@ const condicionesFisicas = ref('')
 const tipoServicio = ref('')
 
 const guardando = ref(false)
+const miembroCreado = ref(false)
 const error = ref('')
 
 const diasPorPlan = { diario: 1, semanal: 7, quincena: 15, mensual: 30 }
+
+// Precios sugeridos. El semanal queda vacío hasta confirmar el valor.
+const preciosPorPlan = { diario: 6000, semanal: '', quincena: 33000, mensual: 60000 }
 
 function calcularVencimiento(planSeleccionado) {
   const hoy = new Date()
@@ -29,9 +35,10 @@ function calcularVencimiento(planSeleccionado) {
   return hoy.toISOString().split('T')[0]
 }
 
-// Sugiere la fecha de vencimiento cada vez que cambia el plan
+// Sugiere vencimiento y monto cada vez que cambia el plan
 watch(plan, (nuevoPlan) => {
   fechaVencimiento.value = calcularVencimiento(nuevoPlan)
+  monto.value = preciosPorPlan[nuevoPlan]
 }, { immediate: true })
 
 async function guardarMiembro() {
@@ -44,26 +51,52 @@ async function guardarMiembro() {
     error.value = 'La fecha de vencimiento es obligatoria'
     return
   }
+  if (!monto.value || Number(monto.value) <= 0) {
+    error.value = 'Escribe el monto pagado'
+    return
+  }
 
   guardando.value = true
-  const { error: insertError } = await supabase.from('miembros').insert({
-    nombre: nombre.value.trim(),
-    celular: celular.value.trim() || null,
+
+  const { data: nuevo, error: insertError } = await supabase
+    .from('miembros')
+    .insert({
+      nombre: nombre.value.trim(),
+      celular: celular.value.trim() || null,
+      plan: plan.value,
+      forma_pago: formaPago.value,
+      fecha_vencimiento: fechaVencimiento.value,
+      edad: edad.value ? Number(edad.value) : null,
+      peso_actual: pesoActual.value ? Number(pesoActual.value) : null,
+      peso_objetivo: pesoObjetivo.value ? Number(pesoObjetivo.value) : null,
+      estatura: estatura.value ? Number(estatura.value) : null,
+      condiciones_fisicas: condicionesFisicas.value.trim() || null,
+      tipo_servicio: tipoServicio.value.trim() || null,
+    })
+    .select('id')
+    .single()
+
+  if (insertError) {
+    guardando.value = false
+    error.value = 'No se pudo guardar: ' + insertError.message
+    return
+  }
+
+  miembroCreado.value = true
+
+  const { error: pagoError } = await supabase.from('pagos').insert({
+    miembro_id: nuevo.id,
     plan: plan.value,
+    monto: Number(monto.value),
     forma_pago: formaPago.value,
-    fecha_vencimiento: fechaVencimiento.value,
-    edad: edad.value ? Number(edad.value) : null,
-    peso_actual: pesoActual.value ? Number(pesoActual.value) : null,
-    peso_objetivo: pesoObjetivo.value ? Number(pesoObjetivo.value) : null,
-    estatura: estatura.value ? Number(estatura.value) : null,
-    condiciones_fisicas: condicionesFisicas.value.trim() || null,
-    tipo_servicio: tipoServicio.value.trim() || null,
   })
 
   guardando.value = false
 
-  if (insertError) {
-    error.value = 'No se pudo guardar: ' + insertError.message
+  if (pagoError) {
+    error.value =
+      'El miembro se guardó, pero no se pudo registrar el pago: ' + pagoError.message +
+      '. No vuelvas a guardarlo (quedaría duplicado).'
     return
   }
 
@@ -99,6 +132,11 @@ async function guardarMiembro() {
             <option value="mensual">Mensual</option>
           </select>
         </div>
+              <div class="mb-3">
+        <label class="form-label">Monto pagado (COP) *</label>
+        <input v-model="monto" type="number" min="1" step="1000" class="form-control" required />
+        <div class="form-text">Se sugiere según el plan. En semanal, escríbelo tú.</div>
+      </div>
         <div class="col">
           <label class="form-label">Forma de pago *</label>
           <select v-model="formaPago" class="form-select">
@@ -151,7 +189,7 @@ async function guardarMiembro() {
 
       <div v-if="error" class="alert alert-danger py-2">{{ error }}</div>
 
-      <button type="submit" class="btn btn-primary w-100" :disabled="guardando">
+            <button type="submit" class="btn btn-primary w-100" :disabled="guardando || miembroCreado">
         {{ guardando ? 'Guardando...' : 'Guardar miembro' }}
       </button>
     </form>

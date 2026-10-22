@@ -3,6 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import { RouterLink } from 'vue-router'
 import { supabase } from '../supabase'
 import { colorSemaforo, textoSemaforo, diasRestantes } from '../utils/semaforo'
+import GraficaAsistencia from '../components/GraficaAsistencia.vue'
+import GraficaIngresos from '../components/GraficaIngresos.vue'
 
 const miembros = ref([])
 const cargando = ref(true)
@@ -191,25 +193,13 @@ const atencionVisible = computed(() => atencion.value.slice(0, 8))
         </div>
       </div>
 
-      <!-- Próximamente -->
+           <!-- Gráficas -->
       <div class="row g-3">
         <div class="col-lg-6">
-          <div class="rg-card rg-soon">
-            <span class="rg-pill">Próximamente</span>
-            <h2 class="mt-2">Asistencia</h2>
-            <p class="text-muted mb-0">
-              Personas que ingresaron por día, semana y mes. Se activa al conectar el lector dactilar.
-            </p>
-          </div>
+          <GraficaAsistencia />
         </div>
         <div class="col-lg-6">
-          <div class="rg-card rg-soon">
-            <span class="rg-pill">Próximamente</span>
-            <h2 class="mt-2">Ingresos</h2>
-            <p class="text-muted mb-0">
-              Efectivo (verde), transferencia (azul) y total, comparados en una sola gráfica. Se activa al registrar cada pago.
-            </p>
-          </div>
+          <GraficaIngresos />
         </div>
       </div>
     </template>
