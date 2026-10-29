@@ -5,6 +5,7 @@ import Dashboard from '../views/Dashboard.vue'
 import Miembros from '../views/Miembros.vue'
 import NuevoMiembro from '../views/NuevoMiembro.vue'
 import PerfilMiembro from '../views/PerfilMiembro.vue'
+import Asistencia from '../views/Asistencia.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -14,7 +15,9 @@ const router = createRouter({
     { path: '/miembros', name: 'miembros', component: Miembros, meta: { requiresAuth: true } },
     { path: '/miembros/nuevo', name: 'nuevo-miembro', component: NuevoMiembro, meta: { requiresAuth: true } },
     { path: '/perfil/:id', name: 'perfil', component: PerfilMiembro, meta: { requiresAuth: true } },
+    { path: '/asistencia', name: 'asistencia', component: Asistencia, meta: { requiresAuth: true } },
     { path: '/semaforo',name: 'Semaforo',component: () => import('../views/Semaforo.vue'),},
+    
   ],
 })
 

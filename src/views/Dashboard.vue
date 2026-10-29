@@ -11,9 +11,10 @@ const cargando = ref(true)
 const error = ref('')
 
 onMounted(async () => {
-  const { data, error: fetchError } = await supabase
+    const { data, error: fetchError } = await supabase
     .from('miembros')
     .select('id, nombre, plan, forma_pago, fecha_inscripcion, fecha_vencimiento')
+    .eq('activo', true)
 
   if (fetchError) error.value = 'No se pudieron cargar los datos del dashboard'
   else miembros.value = data

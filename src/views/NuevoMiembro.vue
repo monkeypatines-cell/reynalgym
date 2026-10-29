@@ -26,7 +26,7 @@ const error = ref('')
 const diasPorPlan = { diario: 1, semanal: 7, quincena: 15, mensual: 30 }
 
 // Precios sugeridos. El semanal queda vacío hasta confirmar el valor.
-const preciosPorPlan = { diario: 6000, semanal: '', quincena: 33000, mensual: 60000 }
+const preciosPorPlan = { diario: 6000, semanal: 21000, quincena: 33000, mensual: 60000 }
 
 function calcularVencimiento(planSeleccionado) {
   const hoy = new Date()
@@ -135,7 +135,7 @@ async function guardarMiembro() {
               <div class="mb-3">
         <label class="form-label">Monto pagado (COP) *</label>
         <input v-model="monto" type="number" min="1" step="1000" class="form-control" required />
-        <div class="form-text">Se sugiere según el plan. En semanal, escríbelo tú.</div>
+        <div class="form-text">Se sugiere según el plan..</div>
       </div>
         <div class="col">
           <label class="form-label">Forma de pago *</label>

@@ -7,6 +7,7 @@ import { colorSemaforo, textoSemaforo } from '../utils/semaforo'
 const router = useRouter()
 const miembros = ref([])
 const busqueda = ref('')
+const mostrarInactivos = ref(false)
 const cargando = ref(true)
 const error = ref('')
 
@@ -15,7 +16,7 @@ async function cargarMiembros() {
   error.value = ''
   const { data, error: fetchError } = await supabase
     .from('miembros')
-    .select('id, nombre, celular, plan, forma_pago, fecha_vencimiento')
+    .select('id, nombre, celular, plan, forma_pago, fecha_vencimiento, activo')
     .order('nombre', { ascending: true })
 
   if (fetchError) {
@@ -30,9 +31,11 @@ async function cargarMiembros() {
 onMounted(cargarMiembros)
 
 const miembrosFiltrados = computed(() => {
-  if (!busqueda.value.trim()) return miembros.value
-  const texto = busqueda.value.toLowerCase()
-  return miembros.value.filter((m) => m.nombre.toLowerCase().includes(texto))
+  const texto = busqueda.value.trim().toLowerCase()
+  return miembros.value.filter((m) => {
+    if (!mostrarInactivos.value && !m.activo) return false
+    return !texto || m.nombre.toLowerCase().includes(texto)
+  })
 })
 
 function verPerfil(id) {
@@ -53,9 +56,13 @@ function verPerfil(id) {
     <input
       v-model="busqueda"
       type="text"
-      class="form-control mb-3"
+      class="form-control mb-2"
       placeholder="Buscar por nombre..."
     />
+    <div class="form-check mb-3">
+      <input id="inactivos" v-model="mostrarInactivos" type="checkbox" class="form-check-input" />
+      <label for="inactivos" class="form-check-label">Mostrar miembros inactivos</label>
+    </div>
 
     <div v-if="cargando" class="text-center text-muted">Cargando...</div>
     <div v-else-if="error" class="alert alert-danger">{{ error }}</div>
@@ -78,10 +85,14 @@ function verPerfil(id) {
         <tr
           v-for="m in miembrosFiltrados"
           :key="m.id"
+          :class="{ 'text-muted': !m.activo }"
           @click="verPerfil(m.id)"
           style="cursor: pointer"
         >
-          <td>{{ m.nombre }}</td>
+          <td>
+            {{ m.nombre }}
+            <span v-if="!m.activo" class="badge bg-secondary ms-1">Inactivo</span>
+          </td>
           <td>{{ m.celular || '—' }}</td>
           <td class="text-capitalize">{{ m.plan }}</td>
           <td class="text-capitalize">{{ m.forma_pago }}</td>

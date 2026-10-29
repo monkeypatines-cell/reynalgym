@@ -15,9 +15,11 @@ async function cerrarSesion() {
   <header v-if="route.meta.requiresAuth" class="rg-navbar">
     <div class="rg-navbar-inner">
       <RouterLink to="/dashboard" class="rg-brand">Reynal<span>Gym</span></RouterLink>
+      
       <nav class="rg-links">
         <RouterLink to="/dashboard" class="rg-link">Dashboard</RouterLink>
         <RouterLink to="/miembros" class="rg-link">Miembros</RouterLink>
+        <RouterLink to="/asistencia" class="rg-link">Asistencia</RouterLink>
       </nav>
       <button class="rg-logout" @click="cerrarSesion">Cerrar sesión</button>
     </div>
